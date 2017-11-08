@@ -2,6 +2,7 @@
 
 [ -z "$SHARED_SECRET" ] && echo "SHARED_SECRET not set" && exit 1;
 [ -z "$ZONE" ] && echo "ZONE not set" && exit 1;
+[ -z "$SERVER" ] && echo "SERVER not set" && exit 1;
 [ -z "$RECORD_TTL" ] && echo "RECORD_TTL not set" && exit 1;
 
 if [ ! -f /var/cache/bind/$ZONE.zone ]
@@ -21,14 +22,14 @@ EOF
 	cat > /var/cache/bind/$ZONE.zone <<EOF
 \$ORIGIN .
 \$TTL 86400	; 1 day
-$ZONE		IN SOA	localhost. root.localhost. (
+$ZONE		IN SOA	${SERVER}. root.${SERVER}. (
 				74         ; serial
 				3600       ; refresh (1 hour)
 				900        ; retry (15 minutes)
 				604800     ; expire (1 week)
 				86400      ; minimum (1 day)
 				)
-			NS	localhost.
+			NS	${SERVER}.
 \$ORIGIN ${ZONE}.
 \$TTL ${RECORD_TTL}
 EOF
@@ -40,11 +41,11 @@ then
 	cat > /etc/dyndns.json <<EOF
 {
     "SharedSecret": "${SHARED_SECRET}",
-    "Server": "localhost",
+    "Server": "${SERVER}",
     "Zone": "${ZONE}.",
     "Domain": "${ZONE}",
     "NsupdateBinary": "/usr/bin/nsupdate",
-	"RecordTTL": ${RECORD_TTL}
+    "RecordTTL": ${RECORD_TTL}
 }
 EOF
 fi
