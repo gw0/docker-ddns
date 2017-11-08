@@ -58,9 +58,15 @@ func Update(w http.ResponseWriter, r *http.Request) {
     var address string
 
     vals := r.URL.Query()
-    sharedSecret = vals["secret"][0]
-    domain = vals["domain"][0]
-    address = vals["addr"][0]
+    if len(vals["secret"]) > 0 {
+        sharedSecret = vals["secret"][0]
+    }
+    if len(vals["domain"]) > 0 {
+        domain = vals["domain"][0]
+    }
+    if len(vals["addr"]) > 0 {
+        address = vals["addr"][0]
+    }
 
     if sharedSecret != appConfig.SharedSecret {
 		log.Println(fmt.Sprintf("Invalid shared secret: %s", sharedSecret))
