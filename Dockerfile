@@ -22,4 +22,4 @@ COPY named.conf.options /etc/bind/named.conf.options
 COPY --from=builder /root/go/bin/dyndns /root/dyndns
 
 EXPOSE 53 8080
-CMD ["sh", "-c", "/root/setup.sh ; service bind9 start ; /root/dyndns"]
+CMD ["sh", "-c", "/root/setup.sh && service bind9 start && /root/dyndns"]
