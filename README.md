@@ -18,8 +18,9 @@ docker run -it -d \
     -p 53:53 \
     -p 53:53/udp \
     -e SHARED_SECRET=changeme \
-    -e ZONE=example.org \
-    -e RECORD_TTL=3600 \
+    -e ZONE=dyn.example.org \
+    -e SERVER=ddns1.example.org \
+    -e RECORD_TTL=60 \
     --name=dyndns \
     davd/docker-ddns:latest
 ```
@@ -56,13 +57,15 @@ before the API.
 
 It provides one single GET request, that is used as follows:
 
-http://myhost.mydomain.tld:8080/update?secret=changeme&domain=foo&addr=1.2.3.4
+```
+http://ddns1.example.org:8080/update?secret=changeme&domain=foo&addr=1.2.3.4
+```
 
 ### Fields
 
 * `secret`: The shared secret set in `envfile`
 * `domain`: The subdomain to your configured domain, in this example it would
-result in `foo.example.org`
+result in `foo.dyn.example.org`
 * `addr`: IPv4 or IPv6 address of the name record
 
 ## Accessing the REST API log
@@ -75,23 +78,17 @@ docker logs -f dyndns
 
 ## DNS setup
 
-To provide a little help... To your "real" domain, like `domain.tld`, you
+To provide a little help... To your "real" domain, like `example.org`, you
 should add a subdomain that is delegated to this DDNS server like this:
 
 ```
-dyndns                   IN NS      ns
-ns                       IN A       <put ipv4 of dns server here>
-ns                       IN AAAA    <optional, put ipv6 of dns server here>
-```
-
-Your management API should then also be accessible through
-
-```
-http://ns.domain.tld:8080/update?...
+dyn                   IN NS      ddns1
+ddns1                 IN A       <put ipv4 of dns server here>
+ddns1                 IN AAAA    <optional, put ipv6 of dns server here>
 ```
 
 If you provide `foo` as a domain when using the REST API, the resulting domain
-will then be `foo.dyndns.domain.tld`.
+will then be `foo.dyn.example.org`.
 
 ## Common pitfalls
 

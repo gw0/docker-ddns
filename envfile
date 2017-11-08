@@ -1,3 +1,4 @@
 SHARED_SECRET=changeme
-ZONE=example.org
+ZONE=dyn.example.org
+SERVER=ddns1.example.org
 RECORD_TTL=3600

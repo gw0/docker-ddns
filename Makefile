@@ -9,7 +9,7 @@ server_test:
 
 api_test:
 	curl "http://localhost:8080/update?secret=changeme&domain=foo&addr=1.2.3.4"
-	dig @localhost foo.example.org
+	dig @localhost foo.dyn.example.org
 
 api_test_recursion:
 	dig @localhost google.com
