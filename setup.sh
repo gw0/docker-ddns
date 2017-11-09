@@ -32,6 +32,7 @@ $ZONE		IN SOA	${SERVER}. root.${SERVER}. (
 			NS	${SERVER}.
 \$ORIGIN ${ZONE}.
 \$TTL ${RECORD_TTL}
+@                       A       ${SERVER}
 EOF
 fi
 
@@ -41,7 +42,7 @@ then
 	cat > /etc/dyndns.json <<EOF
 {
     "SharedSecret": "${SHARED_SECRET}",
-    "Server": "${SERVER}",
+    "Server": "localhost",
     "Zone": "${ZONE}.",
     "Domain": "${ZONE}",
     "NsupdateBinary": "/usr/bin/nsupdate",
@@ -49,3 +50,7 @@ then
 }
 EOF
 fi
+
+echo "fixing permissions on /var/cache/bind..."
+chmod 777 /var/cache/bind /var/cache/bind/* || true
+
